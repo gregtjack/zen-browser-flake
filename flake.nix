@@ -10,7 +10,7 @@
     nixpkgs,
   }: let
     system = "x86_64-linux";
-    version = "1.0.0-a.30";
+    version = "1.0.0-a.31";
     downloadUrl = {
       "specific" = {
         url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-specific.tar.bz2";
@@ -18,7 +18,7 @@
       };
       "generic" = {
         url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-generic.tar.bz2";
-        sha256 = "";
+        sha256 = "1k548dsslm31q7rgc2nff2ly3r3ac688qxyaz5n6i1f5mf8y08y6";
       };
     };
 
@@ -32,11 +32,13 @@
         stdenv.cc.cc
         fontconfig
         libxkbcommon
+        libdrm
         zlib
         freetype
         gtk3
         libxml2
         dbus
+        dbus-glib
         xcb-util-cursor
         alsa-lib
         pango
@@ -72,6 +74,7 @@
     in
       pkgs.stdenv.mkDerivation {
         name = "zen-browser";
+        inherit version;
 
         src = builtins.fetchTarball {
           url = downloadData.url;
@@ -86,7 +89,7 @@
 
         installPhase = ''
           mkdir -p $out/bin && cp -r $src/* $out/bin
-          install -D $desktopSrc/zen.desktop $out/share/applications/dev.zen.Zen.desktop
+          install -D $desktopSrc/zen.desktop $out/share/applications/zen.desktop
           install -D $src/browser/chrome/icons/default/default128.png $out/share/icons/hicolor/128x128/apps/zen.png
         '';
 
